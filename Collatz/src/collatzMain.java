@@ -12,7 +12,7 @@ public class collatzMain {
 
     
     public static void main(String[] args) {
-    	
+    	long startTime = System.nanoTime();
     	long[] prev = new long[1000000];
     	int maxCount = 0;
     	long whichNum = 0;
@@ -52,6 +52,10 @@ public class collatzMain {
         } 
     	System.out.print("Longest sequence was " + maxCount + " from " + whichNum + ": ");
     	collatz(whichNum);
+        prev = null;
+        long endTime = System.nanoTime();
+        System.out.println();
+        System.out.println("Took " + ((double)(endTime - startTime)/1000000000) + " seconds.");
     }
-
+    
 }
