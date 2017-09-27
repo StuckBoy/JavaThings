@@ -2,7 +2,8 @@
 public class CollatzThread {
 	
 	public static void collatzRecursive(long n) {    	
-    	System.out.print(n + " ");
+    	//Recursive Collatz printer. Cleaner to use, but more overhead on large numbers.
+		System.out.print(n + " ");
     	if (n == 1) return;
    		else if (n % 2 == 0) collatzRecursive(n / 2);
    		else collatzRecursive(3*n + 1);
@@ -12,19 +13,20 @@ public class CollatzThread {
 	    //Track execution time.
 	    long startTime = System.nanoTime();
 	    Array prev = new Array();	    	
-	    	
 	    long theMax = 0;
 	    long theNum = 0;
-	    	
+
+	    //Number crunching time.
 	    NumCruncher crunchatizer = new NumCruncher(1,250000, prev);
 	    NumCruncher leCrunch = new NumCruncher(250001, 500000, prev);
 	    NumCruncher crunchberry = new NumCruncher(500001, 750000, prev);
 	    NumCruncher oops = new NumCruncher(750001, 1000000, prev);
-	    	
+	    
 	    crunchatizer.start();
 	    leCrunch.start();
 	    crunchberry.start();
 	    oops.start();
+	    
 	    while(true) {
 	    	try {
 	    		crunchatizer.join();
@@ -37,23 +39,23 @@ public class CollatzThread {
 	    	}
 	    }
 	    
+	    long threadFinish = System.nanoTime();
+	    
 	    for(long c = 1; c < 1000000; c++) {
 	    	if (prev.getNum(c) > theMax) {
 	    		theMax = prev.getNum(c);
 	    		theNum = c;
 	    	}
-	    	System.out.println("Sequence length for " + c + ": " + prev.getNum(c));
+	    	System.out.println("Sequence size for " + c + ": " + prev.getNum(c));
 	    }
 	    
-	   	//Number crunching time.
 	    long endTime = System.nanoTime();
 	    System.out.println();
-	    System.out.println("Took " + ((double)(endTime - startTime)/1000000000) + " seconds.");
-	        
-	    System.out.print("Longest sequence was " + theMax + " from " + theNum + ": ");
+	    System.out.println("All threads finished in " + ((double)(threadFinish - startTime)/1000000000) + " seconds.");
+	    System.out.println("Took " + ((double)(endTime - startTime)/1000000000) + " seconds.");	        
+	    System.out.print("Longest sequence: " + theMax + " from " + theNum + ": ");
 	    //Show the sequence for the longest number less than 1,000,000.
 	    collatzRecursive(theNum);
-			
 	}
 }
 
@@ -76,7 +78,6 @@ class Array {
 }
 
 class NumCruncher extends Thread {
-	
 	long start;
 	long stop;
 	Array prev;
@@ -90,7 +91,6 @@ class NumCruncher extends Thread {
 	}
 	
 	public synchronized void run() {
-	//	long startTime = System.nanoTime();
     	for (long i = start; i < stop; i++) {
     		int count = 0;
     		boolean tooBig = false;
@@ -109,7 +109,6 @@ class NumCruncher extends Thread {
         			}
         		//There's already a sequence generated for this number.
         			else {
-        			//System.out.print("Existing entry found!");
         				count += prev.getNum(n);
         				break;
         			}
@@ -117,16 +116,11 @@ class NumCruncher extends Thread {
         	//Add the sequence length for the number just processed.
         		prev.setNum(i, count);
         	}
-//        	System.out.print("Sequence length for " + startNum + ": " + count);
- //       	System.out.println();
         	//If the sequence was longer than the current maxCount, replace with count.
         	if (count > maxim) {
         		maxim = count;
         		neo = startNum;
         	}
         }
-  //      long endTime = System.nanoTime();
- //       System.out.println();
-//        System.out.println("Took " + ((double)(endTime - startTime)/1000000000) + " seconds.");
-	}
+ 	}
 }
