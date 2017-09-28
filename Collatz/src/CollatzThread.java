@@ -17,15 +17,18 @@ public class CollatzThread {
 	    long theNum = 0;
 
 	    //Number crunching time.
-	    NumCruncher crunchatizer = new NumCruncher(1,250000, prev);
-	    NumCruncher leCrunch = new NumCruncher(250001, 500000, prev);
-	    NumCruncher crunchberry = new NumCruncher(500001, 750000, prev);
-	    NumCruncher oops = new NumCruncher(750001, 1000000, prev);
+	    NumCruncher crunchatizer = new NumCruncher(1,200000, prev);
+	    NumCruncher leCrunch = new NumCruncher(200001, 400000, prev);
+	    NumCruncher crunchberry = new NumCruncher(400001, 600000, prev);
+	    NumCruncher oops = new NumCruncher(600001, 800000, prev);
+	    NumCruncher crunchling = new NumCruncher(800001, 1000000, prev);
+	    
 	    
 	    crunchatizer.start();
 	    leCrunch.start();
 	    crunchberry.start();
 	    oops.start();
+	    crunchling.start();
 	    
 	    while(true) {
 	    	try {
@@ -46,7 +49,7 @@ public class CollatzThread {
 	    		theMax = prev.getNum(c);
 	    		theNum = c;
 	    	}
-	    	System.out.println("Sequence size for " + c + ": " + prev.getNum(c));
+	    	System.out.println("Length of " + c + ": " + prev.getNum(c));
 	    }
 	    
 	    long endTime = System.nanoTime();
@@ -97,15 +100,15 @@ class NumCruncher extends Thread {
         	long startNum = i;
         	long n = startNum;
         	//While the sequence hasn't resolved.
-        	synchronized(prev) {
-        		while (n != 1) {
-        			if (n >= 1000000) tooBig = true;
-        			else tooBig = false;
+        	while (n != 1) {
+        		if (n >= 1000000) tooBig = true;
+        		else tooBig = false;
         		//If the number is too big to check or there isn't a sequence for it.
+        		synchronized(prev) {
         			if (tooBig || prev.checkNum(n)) {
-             			if (n % 2 == 0) n = n / 2;
-             			else n = (3*n) + 1;
-             			count++;
+        				if (n % 2 == 0) n = n / 2;
+        				else n = (3*n) + 1;
+        				count++;
         			}
         		//There's already a sequence generated for this number.
         			else {
@@ -113,7 +116,9 @@ class NumCruncher extends Thread {
         				break;
         			}
         		}
+        	}
         	//Add the sequence length for the number just processed.
+        	synchronized(prev) {
         		prev.setNum(i, count);
         	}
         	//If the sequence was longer than the current maxCount, replace with count.
