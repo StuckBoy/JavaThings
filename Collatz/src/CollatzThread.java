@@ -17,25 +17,25 @@ public class CollatzThread {
 	    long theNum = 0;
 
 	    //Number crunching time.
-	    NumCruncher crunchatizer = new NumCruncher(1,200000, prev);
-	    NumCruncher leCrunch = new NumCruncher(200001, 400000, prev);
-	    NumCruncher crunchberry = new NumCruncher(400001, 600000, prev);
-	    NumCruncher oops = new NumCruncher(600001, 800000, prev);
-	    NumCruncher crunchling = new NumCruncher(800001, 1000000, prev);
-	    
-	    
-	    crunchatizer.start();
-	    leCrunch.start();
-	    crunchberry.start();
-	    oops.start();
-	    crunchling.start();
+	    NumCruncher OneOfFive = new NumCruncher(1,200000, prev);
+	    NumCruncher TwoOfFive = new NumCruncher(200001, 400000, prev);
+	    NumCruncher ThreeOfFive = new NumCruncher(400001, 600000, prev);
+	    NumCruncher FourOfFive = new NumCruncher(600001, 800000, prev);
+	    NumCruncher FiveOfFive = new NumCruncher(800001, 1000000, prev); 
+
+	    OneOfFive.start();
+	    TwoOfFive.start();
+	    ThreeOfFive.start();
+	    FourOfFive.start();
+	    FiveOfFive.start();
 	    
 	    while(true) {
 	    	try {
-	    		crunchatizer.join();
-	    		leCrunch.join();
-	    		crunchberry.join();
-	    		oops.join();
+	    		OneOfFive.join();
+	    		TwoOfFive.join();
+	    		ThreeOfFive.join();
+	    		FourOfFive.join();
+	    		FiveOfFive.join();
 	    		break;
 	    	} catch (InterruptedException e) {
 	    		e.printStackTrace();
@@ -49,11 +49,11 @@ public class CollatzThread {
 	    		theMax = prev.getNum(c);
 	    		theNum = c;
 	    	}
-	    	System.out.println("Length of " + c + ": " + prev.getNum(c));
+	    	//System.out.println("Length of " + c + ": " + prev.getNum(c));
 	    }
 	    
 	    long endTime = System.nanoTime();
-	    System.out.println();
+	    //System.out.println();
 	    System.out.println("All threads finished in " + ((double)(threadFinish - startTime)/1000000000) + " seconds.");
 	    System.out.println("Took " + ((double)(endTime - startTime)/1000000000) + " seconds.");	        
 	    System.out.print("Longest sequence: " + theMax + " from " + theNum + ": ");
@@ -94,7 +94,7 @@ class NumCruncher extends Thread {
 	}
 	
 	public synchronized void run() {
-    	for (long i = start; i < stop; i++) {
+		for (long i = start; i < stop; i++) {
     		int count = 0;
     		boolean tooBig = false;
         	long startNum = i;
